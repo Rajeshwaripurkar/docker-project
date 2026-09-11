@@ -37,5 +37,13 @@ pipeline {
                 sh 'docker build -t $IMAGE_NAME:latest .'
             }
         }
+
+        stage('Docker Push') {
+            steps {
+                sh 'docker tag mywebsite:latest rajeshwaripurkar/mywebsite:latest'
+                sh 'docker push rajeshwaripurkar/mywebsite:latest'
+            }
+        }
     }
 }
+ 
