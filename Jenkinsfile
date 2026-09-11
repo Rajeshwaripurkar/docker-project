@@ -40,10 +40,18 @@ pipeline {
 
         stage('Docker Push') {
             steps {
-                sh 'docker tag mywebsite:latest rajeshwaripurkar/mywebsite:latest'
-                sh 'docker push rajeshwaripurkar/mywebsite:latest'
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-credentials',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker tag mywebsite:latest $DOCKER_USER/mywebsite:latest
+                        docker push $DOCKER_USER/mywebsite:latest
+                    '''
+                }
             }
         }
     }
 }
- 
